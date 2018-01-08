@@ -13,7 +13,7 @@ public class ArrayStorage {
     }
 
     void save(Resume r) {
-        if (countOfResume < storage.length + 1) {
+        if (countOfResume <= storage.length) {
             storage[countOfResume++] = r;
         } else {
             System.out.println("Список резюме переполнен!");
@@ -22,7 +22,7 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
         int res = findIndex(uuid);
-        if (res > -1) {
+        if (res >= 0) {
             return storage[res];
         } else {
             return null;
