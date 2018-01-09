@@ -4,7 +4,7 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+    private Resume[] storage = new Resume[10000];
     private int countOfResume = 0;
 
     void clear() {
@@ -12,9 +12,23 @@ public class ArrayStorage {
         countOfResume = 0;
     }
 
+    void update(Resume r, Resume newR) {
+        int index = findIndex(r.uuid);
+        if (index >= 0) {
+            storage[index] = newR;
+        } else {
+            System.out.println("Такого резюме нет в базе!");
+        }
+
+    }
+
     void save(Resume r) {
         if (countOfResume <= storage.length) {
-            storage[countOfResume++] = r;
+            if (findIndex(r.uuid) < 0) {
+                storage[countOfResume++] = r;
+            } else {
+                System.out.println("Такое резюме уже есть!");
+            }
         } else {
             System.out.println("Список резюме переполнен!");
         }
@@ -28,10 +42,10 @@ public class ArrayStorage {
     void delete(String uuid) {
         if (countOfResume > 0) {
             int res = findIndex(uuid);
-            if (res < countOfResume - 1) {
-                storage[res] = storage[countOfResume-1];
+            if (res < countOfResume - 1 || res >= 0) {     //
+                storage[res] = storage[countOfResume - 1];
             }
-            storage[countOfResume-1]=null;
+            storage[countOfResume - 1] = null;
             countOfResume--;
         }
     }

@@ -12,15 +12,16 @@ public class MainArray {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
         while (true) {
-            System.out.print("Введите одну из команд - (list | save uuid | delete uuid | get uuid | clear | exit): ");
+            System.out.print("Введите одну из команд - (list | save uuid | update old_uuid new_uuid | delete uuid | get uuid | clear | exit): ");
             String[] params = reader.readLine().trim().toLowerCase().split(" ");
-            if (params.length < 1 || params.length > 2) {
+            if (params.length < 1 || params.length > 3) {
                 System.out.println("Неверная команда.");
                 continue;
             }
             String uuid = null;
             if (params.length == 2) {
                 uuid = params[1].intern();
+
             }
             switch (params[0]) {
                 case "list":
@@ -34,6 +35,20 @@ public class MainArray {
                     r.uuid = uuid;
                     ARRAY_STORAGE.save(r);
                     printAll();
+                    break;
+                case "update":
+
+                    if (params.length == 3) {
+                        r = new Resume();
+                        Resume newR = new Resume();
+                        r.uuid = params[1].intern();
+                        newR.uuid = params[2].intern();
+                        ARRAY_STORAGE.update(r, newR);
+                        printAll();
+                    } else {
+                        System.out.println("Ошибка команды, используйте формат: update old_uuid new_uuid");
+                    }
+
                     break;
                 case "delete":
                     ARRAY_STORAGE.delete(uuid);
