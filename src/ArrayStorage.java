@@ -22,18 +22,16 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
         int res = findIndex(uuid);
-        if (res >= 0) {
-            return storage[res];
-        } else {
-            return null;
-        }
+        return res >= 0 ? storage[res] : null;
     }
 
     void delete(String uuid) {
         if (countOfResume > 0) {
             int res = findIndex(uuid);
             if (res < countOfResume - 1) {
-                System.arraycopy(storage, (res + 1), storage, res, (countOfResume - res - 1));
+                storage[res] = storage[countOfResume-1];
+            }if (res==countOfResume-1){
+                storage[res]=null;
             }
             countOfResume--;
         }
