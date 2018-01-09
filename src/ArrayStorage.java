@@ -30,9 +30,8 @@ public class ArrayStorage {
             int res = findIndex(uuid);
             if (res < countOfResume - 1) {
                 storage[res] = storage[countOfResume-1];
-            }if (res==countOfResume-1){
-                storage[res]=null;
             }
+            storage[countOfResume-1]=null;
             countOfResume--;
         }
     }
