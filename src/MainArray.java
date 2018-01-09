@@ -37,7 +37,6 @@ public class MainArray {
                     printAll();
                     break;
                 case "update":
-
                     if (params.length == 3) {
                         r = new Resume();
                         Resume newR = new Resume();
@@ -48,7 +47,6 @@ public class MainArray {
                     } else {
                         System.out.println("Ошибка команды, используйте формат: update old_uuid new_uuid");
                     }
-
                     break;
                 case "delete":
                     ARRAY_STORAGE.delete(uuid);
