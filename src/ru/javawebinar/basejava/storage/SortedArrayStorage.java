@@ -6,43 +6,16 @@ import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-    @Override
-    public void update(Resume r) {
-        if (size == 0) return;
-        int i = getIndex(r.getUuid());
-        if (i < 0) return;
-        storage[i] = r;
+    protected void insertResume(Resume r, int i) {
+        int insPoint = -(++i);
+        if (insPoint != size) {
+            System.arraycopy(storage, insPoint, storage, (insPoint + 1), size - i);
+        }
+        storage[insPoint] = r;
     }
 
-    @Override
-    public void save(Resume r) {
-        int i = (size == 0) ? -1 : getIndex(r.getUuid());
-        if (i < 0) {
-            int insPoint = -(++i);
-            if (size > 0) {
-                if (insPoint != size) {
-                    Resume[] srsArr = Arrays.copyOfRange(storage, insPoint, size);
-                    System.arraycopy(srsArr, 0, storage, (insPoint + 1), srsArr.length);
-                }
-            }
-            storage[insPoint] = r;
-            size++;
-        } else {
-            System.out.println("Резюме " + r + " уже есть!");
-        }
-    }
-
-    @Override
-    public void delete(String uuid) {
-        if (size == 0) return;
-        int i = getIndex(uuid);
-        if (i >= 0) {
-            Resume[] srsArr = Arrays.copyOfRange(storage, i + 1, size);
-            System.arraycopy(srsArr, 0, storage, i, srsArr.length);
-            storage[--size] = null;
-        } else {
-            System.out.println("Резюме " + uuid + " отсутствует!");
-        }
+    protected void eraseResume(int i) {
+        System.arraycopy(storage, i + 1, storage, i, size - i);
     }
 
     @Override
