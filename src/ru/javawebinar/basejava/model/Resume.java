@@ -22,7 +22,6 @@ public class Resume implements Comparable<Resume> {
         if (o == null || getClass() != o.getClass()) return false;
 
         Resume resume = (Resume) o;
-
         return uuid.equals(resume.uuid);
     }
 
