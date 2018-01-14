@@ -1,13 +1,11 @@
 package ru.javawebinar.basejava.storage;
 
 import org.junit.*;
+import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
-
-import static org.junit.Assert.*;
 
 public abstract class AbstractArrayStorageTest {
     private Storage storage;
@@ -25,10 +23,11 @@ public abstract class AbstractArrayStorageTest {
         }
     }
 
-    public Resume[] getMockArr(){
+    public Resume[] getMockArr() {
         return MockArr;
     }
-    public Resume[] storageGetAll(){
+
+    public Resume[] storageGetAll() {
         return storage.getAll();
     }
 
@@ -42,7 +41,6 @@ public abstract class AbstractArrayStorageTest {
         MockArr[1] = new Resume(UUID_2);
         MockArr[2] = new Resume(UUID_3);
     }
-
 
     @Test
     public void clear() {
@@ -64,19 +62,32 @@ public abstract class AbstractArrayStorageTest {
     public void save() {
         Resume r = new Resume("test");
         storage.save(r);
-        Assert.assertTrue((Arrays.binarySearch(storage.getAll(), r)>0));
+        Assert.assertTrue((Arrays.binarySearch(storage.getAll(), r) > 0));
     }
 
     @Test
     public void delete() {
         Resume r = new Resume(UUID_2);
         storage.delete(UUID_2);
-        Assert.assertTrue((Arrays.binarySearch(storage.getAll(), r)<0));
+        Assert.assertTrue((Arrays.binarySearch(storage.getAll(), r) < 0));
     }
 
     @Test
     public void update() {
+        Resume r = new Resume(UUID_2);
+        storage.update(r);
+        Assert.assertEquals(r, storage.get(r.getUuid()));
+    }
 
+    @Test(expected = ExistStorageException.class)
+    public void resumeAlrExst() {
+        Resume r = new Resume(UUID_2);
+        storage.save(r);
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void getNotExist() {
+        storage.get("dummy");
     }
 
 

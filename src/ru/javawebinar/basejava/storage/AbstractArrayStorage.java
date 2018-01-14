@@ -19,7 +19,7 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public void clear() {
-        if (size<=0) return;
+        if (size <= 0) return;
         Arrays.fill(storage, 0, size - 1, null);
         size = 0;
     }
@@ -53,9 +53,10 @@ public abstract class AbstractArrayStorage implements Storage {
         int i = getIndex(uuid);
         if (i >= 0) {
             eraseResume(i);
+            storage[size - 1] = null;
             --size;
         } else {
-           throw new NotExistStorageException(uuid);
+            throw new NotExistStorageException(uuid);
         }
     }
 
