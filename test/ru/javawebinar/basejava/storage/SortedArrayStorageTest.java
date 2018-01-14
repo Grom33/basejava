@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class SortedArrayStorageTest extends AbstractArrayStorageTest {
 
     public SortedArrayStorageTest() {
-        super(SortedArrayStorageTest.class);
+        super(new SortedArrayStorage());
     }
 
     @Test

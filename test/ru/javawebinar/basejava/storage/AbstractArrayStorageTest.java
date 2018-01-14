@@ -15,12 +15,8 @@ public abstract class AbstractArrayStorageTest {
     private static final String UUID_3 = "UUID3";
     private Resume[] MockArr = new Resume[3];
 
-    public AbstractArrayStorageTest(Class clss) {
-        if (clss.equals(ArrayStorageTest.class)) {
-            this.storage = new ArrayStorage();
-        } else if (clss.equals(SortedArrayStorageTest.class)) {
-            this.storage = new SortedArrayStorage();
-        }
+    public AbstractArrayStorageTest(Storage str) {
+        this.storage = str;
     }
 
     public Resume[] getMockArr() {
