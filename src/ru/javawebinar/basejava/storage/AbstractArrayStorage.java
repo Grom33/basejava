@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -38,6 +39,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     @Override
     public void save(Resume r) {
+        if (size>= STORAGE_LIMIT)throw new StorageException("Storage overflow",r.getUuid());
         int i = getIndex(r.getUuid());
         if (i < 0) {
             insertResume(r, i);

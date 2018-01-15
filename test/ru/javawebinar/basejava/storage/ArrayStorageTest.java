@@ -12,9 +12,5 @@ public class ArrayStorageTest extends AbstractArrayStorageTest {
         super(new ArrayStorage());
     }
 
-    @Test
-    public void getAll() {
-       Resume[] mock =  super.getMockArr();
-        Assert.assertArrayEquals(mock, super.storageGetAll());
-    }
+
 }
