@@ -50,7 +50,7 @@ public abstract class AbstractArrayStorageTest {
         Assert.assertEquals(TEST, storage.get(TEST.getUuid()));
     }
 
-    @Test (expected = NotExistStorageException.class)
+    @Test(expected = NotExistStorageException.class)
     public void delete() {
         storage.delete(UUID_2.getUuid());
         storage.get(UUID_2.getUuid());
@@ -83,10 +83,10 @@ public abstract class AbstractArrayStorageTest {
     @Test(expected = StorageException.class)
     public void storageOverFlow() {
         try {
-            for (int i=4; i<=10000;i++){
+            for (int i = 4; i <= 10000; i++) {
                 storage.save(new Resume());
             }
-        } catch (StorageException e){
+        } catch (StorageException e) {
             Assert.fail();
         }
         storage.save(new Resume());
