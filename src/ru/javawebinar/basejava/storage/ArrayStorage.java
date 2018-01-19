@@ -8,8 +8,9 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage extends AbstractArrayStorage {
+
     @Override
-    protected void insertResume(Resume r, int insPoint) {
+    protected void insertResumeToStorage(Resume r, int insPoint) {
         storage[size] = r;
     }
 
