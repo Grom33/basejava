@@ -83,8 +83,8 @@
    - Не меняйте синтаксис методов `ru.javawebinar.basejava.storage.ArrayStorage` и не меняйте класс `ru.javawebinar.basejava.model.Resume`. Нужет только код внутри готовых методов `ru.javawebinar.basejava.storage.ArrayStorage`
    - [Массивы](http://study-java.ru/uroki-java/massivy-v-java/)
    - [Java массивы](http://info.javarush.ru/javarush_articles/2015/12/10/Java-%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2%D1%8B.html)
-- Протестируйте вашу реализацию, запустив `MainTestArrayStorage.main()`: в IDEA слева на полях зеленая стрелка.
-- Протестируйте вашу реализацию интерактивно с помощью `MainArray.main()`.
+- Протестируйте вашу реализацию, запустив `ru.javawebinar.basejava.MainTestArrayStorage.main()`: в IDEA слева на полях зеленая стрелка.
+- Протестируйте вашу реализацию интерактивно с помощью `ru.javawebinar.basejava.MainArray.main()`.
 - Дополнительные материалы по IntelliJ IDEA
   - <a href="https://github.com/JavaOPs/topjava/wiki/IDEA">Idea Wiki</a> (поставить кодировку UTF-8, поменять фонт по умолчанию на DejaVu)
   - <a href="http://learn.javajoy.net/debug-intellij-idea">Отладчик IntelliJ IDEA</a>
@@ -100,4 +100,4 @@ r1, r2, r3,..., rn, null, null,..., null
 <----  storage.length (10000)---------->
 ```
 - Посмотреть на класс `Arrays`. Там есть полезные вещи, которые могут упростить код `ru.javawebinar.basejava.storage.ArrayStorage`.
-- Протестируйте реализацию, запустив MainArray.main(): в IDEA слева на полях зеленая стрелка.
+- Протестируйте реализацию, запустив ru.javawebinar.basejava.MainArray.main(): в IDEA слева на полях зеленая стрелка.

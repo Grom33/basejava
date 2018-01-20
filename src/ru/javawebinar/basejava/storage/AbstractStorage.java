@@ -6,66 +6,53 @@ import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected int size = 0;
 
     @Override
     public void clear() {
-        if (size <= 0) return;
         eraseStorage();
-        size = 0;
     }
 
     @Override
     public void update(Resume r) {
-        if (size <= 0) return;
-        int i = getIndex(r.getUuid());
-        if (i < 0) return;
-
-        updateResume(r, i);
-    }
-
-    @Override
-    public void save(Resume r) {
-
-        int i = getIndex(r.getUuid());
-        if (i < 0) {
-            insertResume(r, i);
-        } else {
-            throw new ExistStorageException(r.getUuid());
-        }
-
-        size++;
+        checkExist(r.getUuid());
+        updateResume(r);
     }
 
     @Override
     public void delete(String uuid) {
-        if (size == 0) return;
+        checkExist(uuid);
         deleteResume(uuid);
+    }
 
-        size--;
+    @Override
+    public void save(Resume r) {
+        checkNotExist(r.getUuid());
+        insertResume(r);
     }
 
     @Override
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getResume(index);
+        checkExist(uuid);
+        return getResume(uuid);
     }
 
-    @Override
-    public int size() {
-        return size;
+    private void checkExist(String uuid) {
+        if (!ResumeIsExist(uuid)) throw new NotExistStorageException(uuid);
     }
 
-    protected abstract void updateResume(Resume r, int i);
+    private void checkNotExist(String uuid) {
+        if (ResumeIsExist(uuid)) throw new ExistStorageException(uuid);
+    }
+
+    protected abstract void updateResume(Resume r);
+
+    protected abstract boolean ResumeIsExist(String uuid);
 
     protected abstract void deleteResume(String uuid);
 
-    protected abstract void insertResume(Resume r, int i);
+    protected abstract void insertResume(Resume r);
 
-    protected abstract Resume getResume(int i);
+    protected abstract Resume getResume(String uuid);
 
     protected abstract void eraseStorage();
 

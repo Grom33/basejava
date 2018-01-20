@@ -8,12 +8,18 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
-    protected static final int STORAGE_LIMIT = 10000;
+    private static final int STORAGE_LIMIT = 10000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
-
+    protected int size = 0;
 
     public void eraseStorage() {
-        Arrays.fill(storage, 0, size - 1, null);
+        if (size>0) Arrays.fill(storage, 0, size - 1, null);
+        size = 0;
+    }
+
+    @Override
+    public int size() {
+        return size;
     }
 
     @Override
@@ -22,16 +28,21 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void insertResume(Resume r, int i) {
-        if (size >= STORAGE_LIMIT) throw new StorageException("Storage overflow", r.getUuid());
-        insertResumeToStorage(r, i);
+    protected boolean ResumeIsExist(String uuid) {
+        return (getIndex(uuid)>=0);
     }
 
+    @Override
+    public void insertResume(Resume r) {
+        if (size >= STORAGE_LIMIT) throw new StorageException("Storage overflow", r.getUuid());
+        int i = getIndex(r.getUuid());
+        insertResumeToStorage(r, i);
+        size++;
+    }
 
     @Override
-    public void updateResume(Resume r, int i) {
-
-        storage[i] = r;
+    public void updateResume(Resume r) {
+        storage[getIndex(r.getUuid())] = r;
     }
 
     @Override
@@ -40,16 +51,16 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         if (i >= 0) {
             eraseResume(i);
             storage[size - 1] = null;
+            size--;
         } else {
             throw new NotExistStorageException(uuid);
         }
     }
 
     @Override
-    protected Resume getResume(int i) {
-        return storage[i];
+    protected Resume getResume(String uuid) {
+        return storage[getIndex(uuid)];
     }
-
 
     protected abstract void eraseResume(int i);
 

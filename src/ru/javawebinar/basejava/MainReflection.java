@@ -1,3 +1,5 @@
+package ru.javawebinar.basejava;
+
 import ru.javawebinar.basejava.model.Resume;
 
 import java.lang.reflect.Field;
