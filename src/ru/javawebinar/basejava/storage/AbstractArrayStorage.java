@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
@@ -12,8 +10,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    public void eraseStorage() {
-        if (size>0) Arrays.fill(storage, 0, size - 1, null);
+    public void clear() {
+        if (size > 0) Arrays.fill(storage, 0, size - 1, null);
         size = 0;
     }
 
@@ -28,44 +26,37 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean ResumeIsExist(String uuid) {
-        return (getIndex(uuid)>=0);
-    }
-
-    @Override
-    public void insertResume(Resume r) {
+    public void insertResume(Resume r, Object resumeKey) {
         if (size >= STORAGE_LIMIT) throw new StorageException("Storage overflow", r.getUuid());
-        int i = getIndex(r.getUuid());
-        insertResumeToStorage(r, i);
+        insertResumeToStorage(r, (Integer) resumeKey);
         size++;
     }
 
     @Override
-    public void updateResume(Resume r) {
-        storage[getIndex(r.getUuid())] = r;
+    public void updateResume(Resume r, Object resumeKey) {
+        storage[(Integer) resumeKey] = r;
     }
 
     @Override
-    protected void deleteResume(String uuid) {
-        int i = getIndex(uuid);
-        if (i >= 0) {
-            eraseResume(i);
-            storage[size - 1] = null;
-            size--;
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+    protected void deleteResume(Object resumeKey) {
+        eraseResume((Integer) resumeKey);
+        storage[size - 1] = null;
+        size--;
     }
 
     @Override
-    protected Resume getResume(String uuid) {
-        return storage[getIndex(uuid)];
+    protected Resume getResume(Object resumeKey) {
+        return storage[(Integer) resumeKey];
+    }
+
+    @Override
+    protected boolean isExist(Object resumeKey) {
+        return (Integer) resumeKey >= 0;
     }
 
     protected abstract void eraseResume(int i);
 
     protected abstract void insertResumeToStorage(Resume r, int i);
-
 
 
 }

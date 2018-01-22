@@ -3,14 +3,13 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    protected ArrayList<Resume> storage = new ArrayList();
+    protected List<Resume> storage = new ArrayList<>();
 
     @Override
-    protected void eraseStorage() {
+    public void clear() {
         storage.clear();
     }
 
@@ -20,23 +19,23 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateResume(Resume r) {
-        storage.set(getIndex(r.getUuid()), r);
+    protected void updateResume(Resume r, Object resumeKey) {
+        storage.set((Integer) resumeKey, r);
     }
 
     @Override
-    protected void deleteResume(String uuid) {
-        storage.remove(getResume(uuid));
+    protected void deleteResume(Object resumeKey) {
+        storage.remove(getResume(resumeKey));
     }
 
     @Override
-    protected void insertResume(Resume r) {
+    protected void insertResume(Resume r, Object resumeKey) {
         storage.add(r);
     }
 
     @Override
-    protected Resume getResume(String uuid) {
-        return storage.get(getIndex(uuid));
+    protected Resume getResume(Object resumeKey) {
+        return storage.get((Integer) resumeKey);
     }
 
     @Override
@@ -45,16 +44,17 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean ResumeIsExist(String uuid) {
-        return (getIndex(uuid) >= 0);
+    protected Integer getResumeKey(String uuid) {
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return null;
     }
 
     @Override
-    protected int getIndex(String uuid) {
-        for (Resume r : storage) {
-            if (Objects.equals(r.getUuid(), uuid)) return storage.indexOf(r);
-        }
-      return -1;
+    protected boolean isExist(Object resumeKey) {
+        return resumeKey != null;
     }
-
 }

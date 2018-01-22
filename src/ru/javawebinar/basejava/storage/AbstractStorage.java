@@ -6,55 +6,51 @@ import ru.javawebinar.basejava.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-
-    @Override
-    public void clear() {
-        eraseStorage();
-    }
-
     @Override
     public void update(Resume r) {
-        checkExist(r.getUuid());
-        updateResume(r);
+        Object resumeKey = getResumeKey(r.getUuid());
+        checkExist(resumeKey, r.getUuid());
+        updateResume(r, resumeKey);
     }
 
     @Override
     public void delete(String uuid) {
-        checkExist(uuid);
-        deleteResume(uuid);
+        Object resumeKey = getResumeKey(uuid);
+        checkExist(resumeKey, uuid);
+        deleteResume(resumeKey);
     }
 
     @Override
     public void save(Resume r) {
-        checkNotExist(r.getUuid());
-        insertResume(r);
+        Object resumeKey = getResumeKey(r.getUuid());
+        checkNotExist(resumeKey, r.getUuid());
+        insertResume(r, resumeKey);
     }
 
     @Override
     public Resume get(String uuid) {
-        checkExist(uuid);
-        return getResume(uuid);
+        Object resumeKey = getResumeKey(uuid);
+        checkExist(resumeKey, uuid);
+        return getResume(resumeKey);
     }
 
-    private void checkExist(String uuid) {
-        if (!ResumeIsExist(uuid)) throw new NotExistStorageException(uuid);
+    private void checkExist(Object resumeKey, String uuid) {
+        if (!isExist(resumeKey)) throw new NotExistStorageException(uuid);
     }
 
-    private void checkNotExist(String uuid) {
-        if (ResumeIsExist(uuid)) throw new ExistStorageException(uuid);
+    private void checkNotExist(Object resumeKey, String uuid) {
+        if (isExist(resumeKey)) throw new ExistStorageException(uuid);
     }
 
-    protected abstract void updateResume(Resume r);
+    protected abstract void updateResume(Resume r, Object resumeKey);
 
-    protected abstract boolean ResumeIsExist(String uuid);
+    protected abstract void deleteResume(Object resumeKey);
 
-    protected abstract void deleteResume(String uuid);
+    protected abstract void insertResume(Resume r, Object resumeKey);
 
-    protected abstract void insertResume(Resume r);
+    protected abstract Resume getResume(Object resumeKey);
 
-    protected abstract Resume getResume(String uuid);
+    protected abstract boolean isExist(Object resumeKey);
 
-    protected abstract void eraseStorage();
-
-    protected abstract int getIndex(String uuid);
+    protected abstract Object getResumeKey(String uuid);
 }

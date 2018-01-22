@@ -3,40 +3,39 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 public class MapStorage extends AbstractStorage {
-
     @Override
-    protected void updateResume(Resume r) {
+    protected void updateResume(Resume r, Object resumeKey) {
 
     }
 
     @Override
-    protected boolean ResumeIsExist(String uuid) {
-        return false;
-    }
-
-    @Override
-    protected void deleteResume(String uuid) {
+    protected void deleteResume(Object resumeKey) {
 
     }
 
     @Override
-    protected void insertResume(Resume r) {
+    protected void insertResume(Resume r, Object resumeKey) {
 
     }
 
     @Override
-    protected Resume getResume(String uuid) {
+    protected Resume getResume(Object resumeKey) {
         return null;
     }
 
     @Override
-    protected void eraseStorage() {
-
+    protected boolean isExist(Object resumeKey) {
+        return false;
     }
 
     @Override
-    protected int getIndex(String uuid) {
-        return 0;
+    protected Object getResumeKey(String uuid) {
+        return null;
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     @Override
