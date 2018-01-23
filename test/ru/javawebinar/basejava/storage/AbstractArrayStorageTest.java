@@ -7,7 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import static org.junit.Assert.*;
 
-public abstract class AbstractArrayStorageTest extends AbstractStorageTest{
+public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
 
 
     public AbstractArrayStorageTest(Storage str) {

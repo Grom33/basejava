@@ -24,13 +24,13 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume r) {
-        Object resumeKey =  checkNotExistResumeKey(r.getUuid());
+        Object resumeKey = checkNotExistResumeKey(r.getUuid());
         insertResume(r, resumeKey);
     }
 
     @Override
     public Resume get(String uuid) {
-        Object resumeKey =  checkExistResumeKey(uuid);
+        Object resumeKey = checkExistResumeKey(uuid);
         return getResume(resumeKey);
     }
 

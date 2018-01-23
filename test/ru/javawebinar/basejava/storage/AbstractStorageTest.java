@@ -13,7 +13,7 @@ public abstract class AbstractStorageTest {
 
     private static final Resume UUID_1 = new Resume("UUID1", "Ivan Ivanov");
     private static final Resume UUID_2 = new Resume("UUID2", "Petr Petrov");
-    private static final Resume UUID_3 = new Resume("UUID3","Sergei Sergeev");
+    private static final Resume UUID_3 = new Resume("UUID3", "Sergei Sergeev");
     private static final Resume TEST = new Resume("test", "Test Testovich");
 
     public AbstractStorageTest(Storage str) {
@@ -84,7 +84,6 @@ public abstract class AbstractStorageTest {
     public void getAllSorted() {
         System.out.println(storage.getAllSorted());
     }
-
 
 
 }
