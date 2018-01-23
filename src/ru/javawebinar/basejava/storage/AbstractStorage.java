@@ -4,42 +4,54 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.*;
+
 public abstract class AbstractStorage implements Storage {
+
+    private static final Comparator<Resume> RESUME_COMPARATOR = (o1, o2) -> o1.getFullName().compareTo(o2.getFullName());
 
     @Override
     public void update(Resume r) {
-        Object resumeKey = getResumeKey(r.getUuid());
-        checkExist(resumeKey, r.getUuid());
+        Object resumeKey = checkExistResumeKey(r.getUuid());
         updateResume(r, resumeKey);
     }
 
     @Override
     public void delete(String uuid) {
-        Object resumeKey = getResumeKey(uuid);
-        checkExist(resumeKey, uuid);
+        Object resumeKey = checkExistResumeKey(uuid);
         deleteResume(resumeKey);
     }
 
     @Override
     public void save(Resume r) {
-        Object resumeKey = getResumeKey(r.getUuid());
-        checkNotExist(resumeKey, r.getUuid());
+        Object resumeKey =  checkNotExistResumeKey(r.getUuid());
         insertResume(r, resumeKey);
     }
 
     @Override
     public Resume get(String uuid) {
-        Object resumeKey = getResumeKey(uuid);
-        checkExist(resumeKey, uuid);
+        Object resumeKey =  checkExistResumeKey(uuid);
         return getResume(resumeKey);
     }
 
-    private void checkExist(Object resumeKey, String uuid) {
-        if (!isExist(resumeKey)) throw new NotExistStorageException(uuid);
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> result = new ArrayList<Resume>(getCollResume());
+        result.sort(RESUME_COMPARATOR);
+        return result;
     }
 
-    private void checkNotExist(Object resumeKey, String uuid) {
+    private Object checkExistResumeKey(String uuid) {
+        Object resumeKey = getResumeKey(uuid);
+        if (!isExist(resumeKey)) throw new NotExistStorageException(uuid);
+        return resumeKey;
+    }
+
+
+    private Object checkNotExistResumeKey(String uuid) {
+        Object resumeKey = getResumeKey(uuid);
         if (isExist(resumeKey)) throw new ExistStorageException(uuid);
+        return resumeKey;
     }
 
     protected abstract void updateResume(Resume r, Object resumeKey);
@@ -53,4 +65,6 @@ public abstract class AbstractStorage implements Storage {
     protected abstract boolean isExist(Object resumeKey);
 
     protected abstract Object getResumeKey(String uuid);
+
+    protected abstract Collection<Resume> getCollResume();
 }
