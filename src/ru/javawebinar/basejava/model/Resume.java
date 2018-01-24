@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -11,11 +12,14 @@ public class Resume {
     private String fullName;
 
     public Resume(String fullName) {
+        Objects.requireNonNull(fullName, "Full name is null");
         this.uuid = UUID.randomUUID().toString();
         this.fullName = fullName;
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(fullName, "Full name is null");
+        Objects.requireNonNull(uuid, "UUID is null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
@@ -36,14 +40,15 @@ public class Resume {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid);
+        return Objects.equals(uuid, resume.uuid) &&
+                Objects.equals(fullName, resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+
+        return Objects.hash(uuid, fullName);
     }
 
     @Override
