@@ -43,8 +43,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public Collection<Resume> getCollResume() {
-        return storage.values();
+    public ArrayList<Resume> getCollResume() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override

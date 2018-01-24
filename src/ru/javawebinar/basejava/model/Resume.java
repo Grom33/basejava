@@ -10,17 +10,9 @@ public class Resume {
     private final String uuid;
     private String fullName;
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public Resume() {
+    public Resume(String fullName) {
         this.uuid = UUID.randomUUID().toString();
-        this.fullName = "Empty";
+        this.fullName = fullName;
     }
 
     public Resume(String uuid, String fullName) {
@@ -28,8 +20,12 @@ public class Resume {
         this.fullName = fullName;
     }
 
-    public Resume(String uuid) {
-        this.uuid = uuid;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public String getUuid() {
