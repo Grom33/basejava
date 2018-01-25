@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapResumeStorage extends AbstractStorage {
@@ -45,7 +46,7 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    public ArrayList<Resume> getCollResume() {
+    public List<Resume> getCollResume() {
         return new ArrayList<>(storage.values());
     }
 

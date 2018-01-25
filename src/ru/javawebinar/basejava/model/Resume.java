@@ -11,17 +11,14 @@ public class Resume {
     private final String uuid;
     private String fullName;
 
-    public Resume(String fullName) {
-        Objects.requireNonNull(fullName, "Full name is null");
-        this.uuid = UUID.randomUUID().toString();
-        this.fullName = fullName;
-    }
-
     public Resume(String uuid, String fullName) {
         Objects.requireNonNull(fullName, "Full name is null");
         Objects.requireNonNull(uuid, "UUID is null");
         this.uuid = uuid;
         this.fullName = fullName;
+    }
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public void setFullName(String fullName) {
@@ -47,7 +44,6 @@ public class Resume {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(uuid, fullName);
     }
 
