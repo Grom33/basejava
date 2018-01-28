@@ -16,7 +16,6 @@ public class Resume {
     private final Map<ContactType, String> contactBlock = new EnumMap<>(ContactType.class);
     private final Map<SectionType, TxtBlock> textBlock = new EnumMap<>(SectionType.class);
 
-
     public Resume(String uuid, String fullName) {
         Objects.requireNonNull(fullName, "Full name is null");
         Objects.requireNonNull(uuid, "UUID is null");
@@ -38,6 +37,22 @@ public class Resume {
 
     public TxtBlock getTextBlock(SectionType type) {
         return textBlock.get(type);
+    }
+
+    public void addTextBlock(SectionType sectionType, TxtBlock textBlock) {
+        this.textBlock.put(sectionType, textBlock);
+    }
+
+    public void addContactBlock(ContactType contactType, String contact){
+        this.contactBlock.put(contactType, contact);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     @Override

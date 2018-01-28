@@ -1,37 +1,42 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.List;
+
 import java.util.Objects;
 
 public class LineTxtBlock extends TxtBlock {
-    private final List<String> lines;
+    private String line;
 
-    public LineTxtBlock(List<String> lines) {
-        Objects.requireNonNull(lines, "line of text must not be null");
-        this.lines = lines;
+    public LineTxtBlock(String line) {
+        Objects.requireNonNull(line);
+        this.line = line;
     }
 
-    public List<String> getLines() {
-        return lines;
+    public String getLine() {
+        return line;
     }
 
-    @Override
-    public String toString() {
-        return "LineTxtBlock{" +
-                "lines=" + lines +
-                '}';
+    public void setLine(String line) {
+        this.line = line;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         LineTxtBlock that = (LineTxtBlock) o;
-        return lines.equals(that.lines);
+
+        return line.equals(that.line);
     }
 
     @Override
     public int hashCode() {
-        return lines.hashCode();
+        return line.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "* '" + line + '\'' +
+                "\n";
     }
 }
