@@ -9,7 +9,7 @@ public class SkillsItem {
     private final String title;
     private String description;
 
-    SkillsItem(LocalDate beginDate, LocalDate endDate, String title, String description) {
+    public SkillsItem(LocalDate beginDate, LocalDate endDate, String title, String description) {
         Objects.requireNonNull(beginDate);
         Objects.requireNonNull(endDate);
         Objects.requireNonNull(title);
@@ -19,7 +19,7 @@ public class SkillsItem {
         this.description = description;
     }
 
-    SkillsItem(LocalDate beginDate, LocalDate endDate, String title) {
+    public SkillsItem(LocalDate beginDate, LocalDate endDate, String title) {
         Objects.requireNonNull(beginDate);
         Objects.requireNonNull(endDate);
         Objects.requireNonNull(title);

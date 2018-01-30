@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class LineListTxtBlock extends TxtBlock {
-    private final List<LineTxtBlock> lines;
+    private final List<String> lines;
 
-    public LineListTxtBlock(List<LineTxtBlock> lines) {
+    public LineListTxtBlock(List<String> lines) {
         Objects.requireNonNull(lines, "line of text must not be null");
         this.lines = lines;
     }
 
-    public List<LineTxtBlock> getLines() {
+    public List<String> getLines() {
         return lines;
     }
 
