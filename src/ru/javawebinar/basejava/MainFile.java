@@ -30,28 +30,20 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        printDir(".\\\\.");
+        printDir(".\\\\.", "");
     }
 
-    private static void printDir(String path) {
+    private static void printDir(String path, String tab) {
         File dir = new File(path);
         File[] list = dir.listFiles();
 
         if (list != null) {
             for (File name : list) {
                 if (name.isDirectory()) {
-                    try {
-                        System.out.println(name.getCanonicalPath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    printDir(name.getPath());
+                    System.out.println(tab+ name.getName());
+                    printDir(name.getPath(), tab + "|--");
                 } else {
-                    try {
-                        System.out.println(name.getCanonicalPath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    System.out.println(tab + name.getName());
                 }
             }
         }
