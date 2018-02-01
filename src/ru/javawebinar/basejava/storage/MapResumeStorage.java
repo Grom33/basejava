@@ -7,51 +7,51 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapResumeStorage extends AbstractStorage {
-    protected Map<String, Resume> storage = new HashMap<>();
+public class MapResumeStorage extends AbstractStorage<Resume> {
+    private Map<String, Resume> map = new HashMap<>();
 
     @Override
-    protected void updateResume(Resume r, Object resumeKey) {
-        storage.put(r.getUuid(), r);
+    protected Resume getSearchKey(String uuid) {
+        return map.get(uuid);
     }
 
     @Override
-    protected void deleteResume(Object resumeKey) {
-        storage.remove(((Resume) resumeKey).getUuid());
+    protected void doUpdate(Resume r, Resume resume) {
+        map.put(r.getUuid(), r);
     }
 
     @Override
-    protected void insertResume(Resume r, Object resumeKey) {
-        storage.put(r.getUuid(), r);
+    protected boolean isExist(Resume resume) {
+        return resume != null;
     }
 
     @Override
-    protected Resume getResume(Object resumeKey) {
-        return (Resume) resumeKey;
+    protected void doSave(Resume r, Resume resume) {
+        map.put(r.getUuid(), r);
     }
 
     @Override
-    protected boolean isExist(Object resumeKey) {
-        return resumeKey!=null;
+    protected Resume doGet(Resume resume) {
+        return resume;
     }
 
     @Override
-    protected Resume getResumeKey(String uuid) {
-        return storage.get(uuid);
+    protected void doDelete(Resume resume) {
+        map.remove(resume.getUuid());
     }
 
     @Override
     public void clear() {
-        storage.clear();
+        map.clear();
     }
 
     @Override
-    public List<Resume> getCollResume() {
-        return new ArrayList<>(storage.values());
+    public List<Resume> doCopyAll() {
+        return new ArrayList<>(map.values());
     }
 
     @Override
     public int size() {
-        return storage.size();
+        return map.size();
     }
 }

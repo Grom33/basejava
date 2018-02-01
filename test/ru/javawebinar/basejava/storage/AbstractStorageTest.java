@@ -3,143 +3,145 @@ package ru.javawebinar.basejava.storage;
 import org.junit.*;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.*;
 
-import java.time.LocalDate;
-import java.util.*;
+import java.io.File;
+import java.time.Month;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractStorageTest {
+    protected static final File STORAGE_DIR = new File("D:\\\\projects\\\\storage");
+
     protected Storage storage;
 
-    private static  Resume UUID_1 = new Resume("UUID1", "Ivan Ivanov");
-    private static  Resume UUID_2 = new Resume("UUID2", "Petr Petrov");
-    private static  Resume UUID_3 = new Resume("UUID3", "Sergei Sergeev");
-    private static  Resume TEST = new Resume("test", "Test Testovich");
-    //private Resume resume = new Resume("Иванов Иван Иванович");
-    private static Map<ContactType, String> mockContact = new EnumMap<>(ContactType.class);
-    private static Map<SectionType, TxtBlock> mockTextBlock = new EnumMap<>(SectionType.class);
+    private static final String UUID_1 = "uuid1";
+    private static final String UUID_2 = "uuid2";
+    private static final String UUID_3 = "uuid3";
+    private static final String UUID_4 = "uuid4";
+
+    private static final Resume R1;
+    private static final Resume R2;
+    private static final Resume R3;
+    private static final Resume R4;
 
     static {
-        mockContact.put(ContactType.EMAIL, "qwerty@mail.ru");
-        mockContact.put(ContactType.GITHUB, "https://github.com/gkislin");
+        R1 = new Resume(UUID_1, "Name1");
+        R2 = new Resume(UUID_2, "Name2");
+        R3 = new Resume(UUID_3, "Name3");
+        R4 = new Resume(UUID_4, "Name4");
 
-        mockTextBlock.put(SectionType.PERSONAL, new LineTxtBlock("Аналитический склад ума, сильная логика, " +
-                "креативность, инициативность. Пурист кода и архитектуры."));
-        List<String> achiv = new ArrayList<>();
-        achiv.add(("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java " +
-                "Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS" +
-                "/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проек" +
-                "тов. Более 1000 выпускников."));
-        achiv.add(("Реализация двухфакторной аутентификации для онлайн платформы управления проект" +
-                "ами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk."));
-
-
-        mockTextBlock.put(SectionType.ACHIEVEMENT, new LineListTxtBlock(achiv));
-
-        List<String> Qual = new ArrayList<>();
-        Qual.add(("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2"));
-        Qual.add(("Version control: Subversion, Git, Mercury, ClearCase, Perforce"));
-        Qual.add(("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,"));
-
-        mockTextBlock.put(SectionType.QUALIFICATIONS, new LineListTxtBlock(Qual));
-
-        List<Organization> orgs = new ArrayList<>();
-
-        orgs.add(new Organization("Java Online Projects", new SkillsItem(LocalDate.of(2013, 10, 1), LocalDate.now(), "Автор проекта",
-                "Создание, организация и проведение Java онлайн проектов и стажировок.")));
-
-        mockTextBlock.put(SectionType.EXPERIENCE, new OrganizationTxtBlock(orgs));
-
-        orgs.clear();
-
-        orgs.add(new Organization("JСанкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
-                new SkillsItem(LocalDate.of(1993, 9, 1), LocalDate.of(1996, 7, 1)
-                        , "ААспирантура (программист С, С++)")));
-        orgs.get(0).addSkill(LocalDate.of(1987, 9, 1), LocalDate.of(1993, 7, 1)
-                , "\tИнженер (программист Fortran, C)");
-        mockTextBlock.put(SectionType.EDUCATION, new OrganizationTxtBlock(orgs));
+        R1.addContact(ContactType.MAIL, "mail1@ya.ru");
+        R1.addContact(ContactType.PHONE, "11111");
+        R1.addSection(SectionType.OBJECTIVE, new TextSection("Objective1"));
+        R1.addSection(SectionType.PERSONAL, new TextSection("Personal data"));
+        R1.addSection(SectionType.ACHIEVEMENT, new ListSection("Achivment11", "Achivment12", "Achivment13"));
+        R1.addSection(SectionType.QUALIFICATIONS, new ListSection("Java", "SQL", "JavaScript"));
+        R1.addSection(SectionType.EXPERIENCE,
+                new OrganizationSection(
+                        new Organization("Organization11", "http://Organization11.ru",
+                                new Organization.Position(2005, Month.JANUARY, "position1", "content1"),
+                                new Organization.Position(2001, Month.MARCH, 2005, Month.JANUARY, "position2", "content2"))));
+        R1.addSection(SectionType.EDUCATION,
+                new OrganizationSection(
+                        new Organization("Institute", null,
+                                new Organization.Position(1996, Month.JANUARY, 2000, Month.DECEMBER, "aspirant", null),
+                                new Organization.Position(2001, Month.MARCH, 2005, Month.JANUARY, "student", "IT facultet")),
+                        new Organization("Organization12", "http://Organization12.ru")));
+        R2.addContact(ContactType.SKYPE, "skype2");
+        R2.addContact(ContactType.PHONE, "22222");
+        R1.addSection(SectionType.EXPERIENCE,
+                new OrganizationSection(
+                        new Organization("Organization2", "http://Organization2.ru",
+                                new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));
     }
 
-
-    public AbstractStorageTest(Storage str) {
-        this.storage = str;
+    protected AbstractStorageTest(Storage storage) {
+        this.storage = storage;
     }
 
     @Before
     public void setUp() throws Exception {
         storage.clear();
-        for (Map.Entry<ContactType, String> entry : mockContact.entrySet()) {
-            UUID_1.addContactBlock(entry.getKey(), entry.getValue());
-        }
-
-        for (Map.Entry<SectionType, TxtBlock> entry : mockTextBlock.entrySet()) {
-            UUID_1.addTextBlock(entry.getKey(), entry.getValue());
-        }
-        storage.save(UUID_1);
-        storage.save(UUID_2);
-        storage.save(UUID_3);
+        storage.save(R1);
+        storage.save(R2);
+        storage.save(R3);
     }
 
     @Test
-    public void clear() {
+    public void size() throws Exception {
+        assertSize(3);
+    }
+
+    @Test
+    public void clear() throws Exception {
         storage.clear();
-        Assert.assertEquals(0, storage.size());
+        assertSize(0);
     }
 
     @Test
-    public void size() {
-        Assert.assertEquals(3, storage.size());
-    }
-
-    @Test
-    public void get() {
-        Assert.assertEquals(UUID_2, storage.get("UUID2"));
-    }
-
-    @Test
-    public void save() {
-        storage.save(TEST);
-        Assert.assertEquals(TEST, storage.get(TEST.getUuid()));
+    public void update() throws Exception {
+        Resume newResume = new Resume(UUID_1, "New Name");
+        storage.update(newResume);
+        assertTrue(newResume.equals(storage.get(UUID_1)));
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void delete() {
-        storage.delete(UUID_2.getUuid());
-        storage.get(UUID_2.getUuid());
-    }
-
-    @Test
-    public void update() {
-        //storage.update(r);
-        //Assert.assertEquals(r, storage.get(r.getUuid()));
-    }
-
-    @Test
-    public void getAll() {
-        Assert.assertEquals(3, storage.size());
-        storage.get(UUID_1.getUuid());
-        storage.get(UUID_2.getUuid());
-        storage.get(UUID_3.getUuid());
-    }
-
-    @Test(expected = ExistStorageException.class)
-    public void resumeAllrExist() {
-        storage.save(UUID_1);
-    }
-
-    @Test(expected = NotExistStorageException.class)
-    public void getNotExist() {
+    public void updateNotExist() throws Exception {
         storage.get("dummy");
     }
 
     @Test
-    public void getAllSorted() {
-        ArrayList<Resume> sortedList = new ArrayList<>(storage.getAllSorted());
-        Assert.assertEquals(UUID_1, sortedList.get(0));
-        Assert.assertEquals(UUID_2, sortedList.get(1));
-        Assert.assertEquals(UUID_3, sortedList.get(2));
+    public void getAllSorted() throws Exception {
+        List<Resume> list = storage.getAllSorted();
+        assertEquals(3, list.size());
+        assertEquals(list, Arrays.asList(R1, R2, R3));
     }
 
+    @Test
+    public void save() throws Exception {
+        storage.save(R4);
+        assertSize(4);
+        assertGet(R4);
+    }
 
+    @Test(expected = ExistStorageException.class)
+    public void saveExist() throws Exception {
+        storage.save(R1);
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void delete() throws Exception {
+        storage.delete(UUID_1);
+        assertSize(2);
+        storage.get(UUID_1);
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void deleteNotExist() throws Exception {
+        storage.delete("dummy");
+    }
+
+    @Test
+    public void get() throws Exception {
+        assertGet(R1);
+        assertGet(R2);
+        assertGet(R3);
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void getNotExist() throws Exception {
+        storage.get("dummy");
+    }
+
+    private void assertGet(Resume r) {
+        assertEquals(r, storage.get(r.getUuid()));
+    }
+
+    private void assertSize(int size) {
+        assertEquals(size, storage.size());
+    }
 }

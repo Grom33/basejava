@@ -4,51 +4,51 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.*;
 
-public class MapUUIDStorage extends AbstractStorage {
-    protected Map<String, Resume> storage = new HashMap<>();
+public class MapUUIDStorage extends AbstractStorage<String> {
+    private Map<String, Resume> map = new HashMap<>();
 
     @Override
-    protected void updateResume(Resume r, Object resumeKey) {
-        storage.put((String) resumeKey, r);
-    }
-
-    @Override
-    protected void deleteResume(Object resumeKey) {
-        storage.remove(resumeKey);
-    }
-
-    @Override
-    protected void insertResume(Resume r, Object resumeKey) {
-        storage.put((String) resumeKey, r);
-    }
-
-    @Override
-    protected Resume getResume(Object resumeKey) {
-        return storage.get(resumeKey);
-    }
-
-    @Override
-    protected boolean isExist(Object resumeKey) {
-        return storage.containsKey(resumeKey);
-    }
-
-    @Override
-    protected Object getResumeKey(String uuid) {
+    protected String getSearchKey(String uuid) {
         return uuid;
     }
 
     @Override
-    public void clear() {
-        storage.clear();
+    protected void doUpdate(Resume r, String uuid) {
+        map.put(uuid, r);
     }
 
     @Override
-    public List<Resume> getCollResume() {
-        return new ArrayList<>(storage.values());
+    protected boolean isExist(String uuid) {
+        return map.containsKey(uuid);
+    }
+
+    @Override
+    protected void doSave(Resume r, String uuid) {
+        map.put(uuid, r);
+    }
+
+    @Override
+    protected Resume doGet(String uuid) {
+        return map.get(uuid);
+    }
+
+    @Override
+    protected void doDelete(String uuid) {
+        map.remove(uuid);
+    }
+
+    @Override
+    public void clear() {
+        map.clear();
+    }
+
+    @Override
+    public List<Resume> doCopyAll() {
+        return new ArrayList<>(map.values());
     }
 
     @Override
     public int size() {
-        return storage.size();
+        return map.size();
     }
 }

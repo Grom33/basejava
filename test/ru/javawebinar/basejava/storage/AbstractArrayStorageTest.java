@@ -7,22 +7,20 @@ import ru.javawebinar.basejava.model.Resume;
 
 import static org.junit.Assert.*;
 
-public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
-
-
-    public AbstractArrayStorageTest(Storage str) {
-        super(str);
-    }
-
-    @Test(expected = StorageException.class)
-    public void storageOverFlow() {
-        try {
-            for (int i = 4; i <= 10000; i++) {
-                storage.save(new Resume(""));
-            }
-        } catch (StorageException e) {
-            Assert.fail();
+    public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
+        protected AbstractArrayStorageTest(Storage storage) {
+            super(storage);
         }
-        storage.save(new Resume(""));
+
+        @Test(expected = StorageException.class)
+        public void saveOverflow() throws Exception {
+            try {
+                for (int i = 4; i <= AbstractArrayStorage.STORAGE_LIMIT; i++) {
+                    storage.save(new Resume("Name" + i));
+                }
+            } catch (StorageException e) {
+                Assert.fail();
+            }
+            storage.save(new Resume("Overflow"));
+        }
     }
-}

@@ -1,14 +1,19 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class OrganizationTxtBlock extends TxtBlock {
-
+public class OrganizationSection extends Section implements Serializable {
     private final List<Organization> organizations;
 
-    public OrganizationTxtBlock(List<Organization> organizations) {
-        Objects.requireNonNull(organizations);
+    public OrganizationSection(Organization... organizations) {
+        this(Arrays.asList(organizations));
+    }
+
+    public OrganizationSection(List<Organization> organizations) {
+        Objects.requireNonNull(organizations, "organizations must not be null");
         this.organizations = organizations;
     }
 
@@ -21,7 +26,7 @@ public class OrganizationTxtBlock extends TxtBlock {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OrganizationTxtBlock that = (OrganizationTxtBlock) o;
+        OrganizationSection that = (OrganizationSection) o;
 
         return organizations.equals(that.organizations);
     }
@@ -33,8 +38,6 @@ public class OrganizationTxtBlock extends TxtBlock {
 
     @Override
     public String toString() {
-        return "OrganizationTxtBlock{" +
-                "organizations=" + organizations +
-                '}';
+        return organizations.toString();
     }
 }
