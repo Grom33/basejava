@@ -41,9 +41,7 @@ public class MainFile {
             for (File name : list) {
                 if (name.isDirectory()) {
                     System.out.println(tab+ name.getName());
-                    printDir(name.getPath(), tab + "|--");
-                } else {
-                    System.out.println(tab + name.getName());
+                    printDir(name.getPath(), tab + "\t");
                 }
             }
         }

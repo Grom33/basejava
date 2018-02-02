@@ -2,26 +2,25 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.serializers.ResumeSerializer;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
-    private ResumeSerializer RS;
+    private ResumeSerializer resumeSerializer;
 
     protected PathStorage(String dir, ResumeSerializer rs) {
         Objects.requireNonNull(rs, "Resume serializer must not be null");
         Objects.requireNonNull(dir, "directory must not be null");
         directory = Paths.get(dir);
-        RS = rs;
+        resumeSerializer = rs;
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
         }
@@ -47,13 +46,13 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected Path getSearchKey(String uuid) {
-        return Paths.get(directory.toString(), uuid);
+        return directory.resolve(uuid);
     }
 
     @Override
     protected void doUpdate(Resume r, Path path) {
         try {
-            RS.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            resumeSerializer.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path write error", r.getUuid(), e);
         }
@@ -61,7 +60,8 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected boolean isExist(Path path) {
-        return Files.exists(path);
+        return !path.toFile().isDirectory() && Files.exists(path);
+
     }
 
     @Override
@@ -77,7 +77,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected Resume doGet(Path Path) {
         try {
-            return RS.doRead(new BufferedInputStream(Files.newInputStream(Path)));
+            return resumeSerializer.doRead(new BufferedInputStream(Files.newInputStream(Path)));
         } catch (IOException e) {
             throw new StorageException("Path read error", Path.toFile().getName(), e);
         }
