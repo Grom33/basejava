@@ -25,19 +25,24 @@ public class DataStreamSerializer implements ResumeSerializer {
             Map<SectionType, Section> sections = r.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue().getClass().getName());
-                switch (entry.getValue().getClass().getName()) {
-                    case "ru.javawebinar.basejava.model.TextSection":
+                String section = entry.getKey().name();
+                dos.writeUTF(section);
+
+                // dos.writeUTF(entry.getValue().getClass().getName());
+                switch (section) {
+                    case "PERSONAL":
+                    case "OBJECTIVE":
                         TextSection textSection = (TextSection) entry.getValue();
                         dos.writeUTF(textSection.getContent());
                         break;
-                    case "ru.javawebinar.basejava.model.ListSection":
+                    case "ACHIEVEMENT":
+                    case "QUALIFICATIONS":
                         ListSection listSection = (ListSection) entry.getValue();
                         dos.writeUTF(String.valueOf(listSection.getItems().size()));
                         listSection.getItems().forEach(item -> dosWrite(dos, item));
                         break;
-                    case "ru.javawebinar.basejava.model.OrganizationSection":
+                    case "EXPERIENCE":
+                    case "EDUCATION":
                         OrganizationSection organizationSection = (OrganizationSection) entry.getValue();
                         List<Organization> organizations = organizationSection.getOrganizations();
                         dos.writeUTF(String.valueOf(organizations.size()));
@@ -54,7 +59,6 @@ public class DataStreamSerializer implements ResumeSerializer {
                             }
                         }
                         break;
-
                 }
             }
         } catch (IOException e) {
@@ -76,14 +80,15 @@ public class DataStreamSerializer implements ResumeSerializer {
 
             int sizeSections = dis.readInt();
             for (int i = 0; i < sizeSections; i++) {
-
-                SectionType sectionType = SectionType.valueOf(dis.readUTF());
-
-                switch (dis.readUTF()) {
-                    case "ru.javawebinar.basejava.model.TextSection":
+                String section = dis.readUTF();
+                SectionType sectionType = SectionType.valueOf(section);
+                switch (section) {
+                    case "PERSONAL":
+                    case "OBJECTIVE":
                         resume.addSection(sectionType, new TextSection(dis.readUTF()));
                         break;
-                    case "ru.javawebinar.basejava.model.ListSection":
+                    case "ACHIEVEMENT":
+                    case "QUALIFICATIONS":
                         int itemSize = Integer.valueOf(dis.readUTF());
                         List<String> items = new ArrayList<>();
                         for (int it = 0; it < itemSize; it++) {
@@ -91,7 +96,8 @@ public class DataStreamSerializer implements ResumeSerializer {
                         }
                         resume.addSection(sectionType, new ListSection(items));
                         break;
-                    case "ru.javawebinar.basejava.model.OrganizationSection":
+                    case "EXPERIENCE":
+                    case "EDUCATION":
                         int orgSize = Integer.valueOf(dis.readUTF());
                         List<Organization> orgList = new ArrayList<>();
                         for (int ios = 0; ios < orgSize; ios++) {
@@ -108,7 +114,6 @@ public class DataStreamSerializer implements ResumeSerializer {
                         resume.addSection(sectionType, new OrganizationSection(orgList));
                         break;
                 }
-                // TODO implements sections
             }
             return resume;
         }
