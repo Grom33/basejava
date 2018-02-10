@@ -6,6 +6,7 @@ import ru.javawebinar.basejava.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -38,8 +39,9 @@ public class DataStreamSerializer implements ResumeSerializer {
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
                         ListSection listSection = (ListSection) entry.getValue();
-                        dos.writeUTF(String.valueOf(listSection.getItems().size()));
-                        listSection.getItems().forEach(item -> dosWrite(dos, item));
+                        //dos.writeUTF(String.valueOf(listSection.getItems().size()));
+                        //listSection.getItems().forEach(item -> dosWrite(dos, item));
+                        dosWrite(dos,listSection.getItems(), dos::writeUTF);
                         break;
                     case "EXPERIENCE":
                     case "EDUCATION":
@@ -89,7 +91,7 @@ public class DataStreamSerializer implements ResumeSerializer {
                         break;
                     case "ACHIEVEMENT":
                     case "QUALIFICATIONS":
-                        int itemSize = Integer.valueOf(dis.readUTF());
+                        int itemSize = dis.readInt();
                         List<String> items = new ArrayList<>();
                         for (int it = 0; it < itemSize; it++) {
                             items.add(dis.readUTF());
@@ -119,12 +121,17 @@ public class DataStreamSerializer implements ResumeSerializer {
         }
     }
 
-    private void dosWrite(DataOutputStream dos, String data) {
-        try {
-            dos.writeUTF(data);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private interface ElementWriter<T> {
+        void write(T t) throws IOException;
+    }
+
+
+    private <T> void dosWrite(DataOutputStream dos, Collection<T> collection, ElementWriter<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
+            writer.write(item);
         }
+
     }
 
 }
