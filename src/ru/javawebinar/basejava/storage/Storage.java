@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface Storage {
@@ -12,12 +13,12 @@ public interface Storage {
 
     void save(Resume r);
 
-    Resume get(String uuid);
+    Resume get(String uuid) throws SQLException;
 
     void delete(String uuid);
 
-    List<Resume> getAllSorted();
+    List<Resume> getAllSorted() throws SQLException;
 
-    int size();
+    int size() throws SQLException;
 
 }
