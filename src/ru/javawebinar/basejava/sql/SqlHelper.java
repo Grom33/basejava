@@ -1,55 +1,51 @@
 package ru.javawebinar.basejava.sql;
 
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 
 import java.sql.*;
 
 public class SqlHelper {
+    private ConnectionFactory connectionFactory;
 
-    public static ConnectionFactory getConnection(String dbUrl, String dbUser, String dbPassword) {
-        return () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+    public SqlHelper(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
-    public static void doQuery(ConnectionFactory connFac, String sql, String... setParams) {
-        try (Connection conn = connFac.getConnection();
+    public void doQuery(String sql) {
+        execute(sql, PreparedStatement::execute);
+    }
+
+    public <T> T execute(String sql, SqlExecutor<T> executor) {
+        try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            for (int i = 0; i < setParams.length; i++) {
-                ps.setString(i + 1, setParams[i]);
+            return executor.execute(ps);
+        } catch (SQLException e) {
+            throw ExceptionUtil.convertException(e);
+        }
+    }
+
+    public <T> T transactionalExecute(SqlTransaction<T> executor) {
+        try (Connection conn = connectionFactory.getConnection()) {
+            try {
+                conn.setAutoCommit(false);
+                T res = executor.execute(conn);
+                conn.commit();
+                return res;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw ExceptionUtil.convertException(e);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
+    }
+
+    public void doQueryWithParams(Connection conn, String query, String... par) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            for (int i = 0; i < par.length; i++) {
+                ps.setString(i + 1, par[i]);
             }
             ps.execute();
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
-    }
-
-    public static void doQuery(ConnectionFactory connFac, String sql) {
-        try (Connection conn = connFac.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.execute();
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
-    }
-
-    public static ResultSet getResultSet(ConnectionFactory connFac, String sql, String... setParams) {
-        try (Connection conn = connFac.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            for (int i = 0; i < setParams.length; i++) {
-                ps.setString(i + 1, setParams[i]);
-            }
-            return ps.executeQuery();
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
-    }
-
-    public static ResultSet getResultSet(ConnectionFactory connFac, String sql) {
-        try (Connection conn = connFac.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            return ps.executeQuery();
-        } catch (SQLException e) {
-            throw new StorageException(e);
         }
     }
 }
