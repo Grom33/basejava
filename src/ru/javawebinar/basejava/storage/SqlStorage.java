@@ -92,7 +92,8 @@ public class SqlStorage implements Storage {
         List<Resume> resumes = new ArrayList<>();
         return sqlHelper.execute("    SELECT * FROM resume r " +
                         "              LEFT JOIN contact c " +
-                        "                     ON r.uuid = c.resume_uuid"
+                        "                     ON r.uuid = c.resume_uuid"+
+                        "               ORDER BY r.full_name, r.uuid"
                 , ps -> {
                     ResultSet rs = ps.executeQuery();
                     if (!rs.next()) {
