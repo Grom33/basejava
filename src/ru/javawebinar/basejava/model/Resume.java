@@ -4,10 +4,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * com.urise.webapp.model.ru.javawebinar.basejava.model.Resume class
@@ -66,6 +63,10 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public void addSection(SectionType type, Section section) {
         sections.put(type, section);
+    }
+
+    public void addSections (Map<SectionType, Section> sects){
+        sections.putAll(sects);
     }
 
     @Override
