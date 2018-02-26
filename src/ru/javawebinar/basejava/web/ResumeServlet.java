@@ -22,6 +22,7 @@ public class ResumeServlet extends HttpServlet {
             "postgres");
 
     public ResumeServlet() throws ClassNotFoundException {
+
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -42,28 +43,21 @@ public class ResumeServlet extends HttpServlet {
             response.getWriter().write("<th>UUID</th>");
             response.getWriter().write("</tr>");
 
-            List<Resume> resumeList = new ArrayList<>();
-            try {
-                resumeList = storage.getAllSorted();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            resumeList.stream().peek((resume) -> {
-                try {
-                    response.getWriter().write(HtmlHelper.tableRow(HtmlHelper.tableData(resume.getFullName())
-                            + HtmlHelper.tableData(resume.getUuid())));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }).collect(Collectors.toList());
+            List<Resume> resumeList = storage.getAllSorted();
+
+            resumeList.forEach((resume)->{
+                        try {
+                            response.getWriter().write(HtmlHelper.tableRow(HtmlHelper.tableData(resume.getFullName())
+                                    + HtmlHelper.tableData(resume.getUuid())));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+            );
+
             response.getWriter().write("</table>");
         } else {
-            Resume resume = new Resume();
-            try {
-                resume = storage.get(uuid);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            Resume resume = storage.get(uuid);
             response.getWriter().write(HtmlHelper.header(resume.getFullName()));
             response.getWriter().write(HtmlHelper.paragraph(resume.getUuid()));
         }

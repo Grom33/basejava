@@ -13,11 +13,11 @@ public interface Storage {
 
     void save(Resume r);
 
-    Resume get(String uuid) throws SQLException;
+    Resume get(String uuid);
 
     void delete(String uuid);
 
-    List<Resume> getAllSorted() throws SQLException;
+    List<Resume> getAllSorted();
 
     int size() throws SQLException;
 
