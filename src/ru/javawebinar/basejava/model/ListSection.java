@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ListSection extends Section implements Serializable {
     private List<String> items;
@@ -43,5 +44,10 @@ public class ListSection extends Section implements Serializable {
     @Override
     public int hashCode() {
         return items.hashCode();
+    }
+
+    @Override
+    public String toHTML() {
+        return items.stream().collect(Collectors.joining("</li><li>","<ul><li>","</li></ul>"));
     }
 }

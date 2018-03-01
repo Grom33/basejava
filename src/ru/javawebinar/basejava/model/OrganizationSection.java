@@ -46,4 +46,9 @@ public class OrganizationSection extends Section implements Serializable {
     public String toString() {
         return organizations.toString();
     }
+
+    @Override
+    public String toHTML() {
+        return null;
+    }
 }

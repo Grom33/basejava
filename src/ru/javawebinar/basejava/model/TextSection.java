@@ -38,4 +38,9 @@ public class TextSection extends Section implements Serializable {
     public int hashCode() {
         return content.hashCode();
     }
+
+    @Override
+    public String toHTML() {
+        return "<ul><li>"+content+"</li></ul>";
+    }
 }
